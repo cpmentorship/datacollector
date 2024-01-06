@@ -8,7 +8,7 @@ import pytz
 
 def send_data(value):
     url = "https://io.adafruit.com/api/v2/nathandyao/feeds/dashpi00-airqualitysensor/data"
-    headers = {"Content-Type": "application/json", "charset":"utf-8", "X-AIO-Key":"aio_eEMf09p64Oc74TOazcPWffUQZOwd"}
+    headers = {"Content-Type": "application/json", "charset":"utf-8", "X-AIO-Key":"aio_qdah05pVA7zNQeYEwAlECkwVjHCk"}
    
 
     pst_tz = pytz.timezone('US/Pacific')
@@ -40,7 +40,7 @@ def run_example():
         print("\nVOC Index is: " + str(voc))
 
         send_data(voc)
-        time.sleep(60)
+        time.sleep(60) #every minute
 
 if __name__ == '__main__':
     try:
