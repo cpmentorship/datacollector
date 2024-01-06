@@ -1,5 +1,13 @@
 # First Time Setup Instructions
 
+## Step 0: Hardware and Example code
+
+
+![The Air Quality Sensor ](images/IMG_8336.jpeg)
+
+
+The Example code is from [here](https://learn.sparkfun.com/tutorials/air-quality-sensor---sgp40-qwiic-hookup-guide/all).
+
 ## Step 1: Setup the Virtual Environment
 
 First, set up a virtual environment for the project. This keeps your dependencies organized and separate from other projects.
@@ -85,4 +93,6 @@ VOC Index is: 63
 2. **Enter Adafruit IO Credentials**: Ensure your Adafruit IO credentials are correctly entered in the function.
 
 3. **Run the Function**: This function will transmit the collected data to the feed you created in your Adafruit IO account.
+
+![Seeting 1](images/io.adafruit.com-clickio.png)
 
