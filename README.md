@@ -58,3 +58,31 @@ VOC Index is: 64
 VOC Index is: 63
 
 ```
+
+
+## Next Steps: Connecting to Adafruit IO
+
+### Step 6: Adafruit IO Account Setup
+
+1. **Create an Adafruit IO Account**: Visit [Adafruit IO](https://accounts.adafruit.com/users/sign_in) and sign up for an account if you don't already have one.
+   
+   Use the following credentials:
+   - Username: `nathandyao`
+   - Password: `alviso`
+
+2. **Create a New Feed**: Once logged in, create a new feed for your data. This will be used to store the data collected from your sensor.
+
+### Step 7: Create a Dashboard
+
+1. **Dashboard Setup**: In your Adafruit IO account, navigate to the dashboards section and create a new dashboard.
+   
+2. **Add Chart Block**: Customize your dashboard by adding a chart block. This will visually represent the data collected from your sensor.
+
+### Step 8: Configure Data Transmission
+
+1. **Update the `send_data` Function**: In your `datacollector` project, locate the `send_data` function.
+   
+2. **Enter Adafruit IO Credentials**: Ensure your Adafruit IO credentials are correctly entered in the function.
+
+3. **Run the Function**: This function will transmit the collected data to the feed you created in your Adafruit IO account.
+

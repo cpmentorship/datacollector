@@ -2,6 +2,27 @@ from __future__ import print_function
 import qwiic_sgp40
 import time
 import sys
+import requests
+from datetime import datetime
+import pytz
+
+def send_data(value):
+    url = "https://io.adafruit.com/api/v2/nathandyao/feeds/dashpi00-airqualitysensor/data"
+    headers = {"Content-Type": "application/json", "charset":"utf-8", "X-AIO-Key":"aio_eEMf09p64Oc74TOazcPWffUQZOwd"}
+   
+
+    pst_tz = pytz.timezone('US/Pacific')
+    now = datetime.now()
+    now_pst = pst_tz.localize(now)
+
+    # Add formatting
+    fmt = '%Y-%m-%d %H:%M:%S %Z%z'
+    now_str = now_pst.strftime(fmt)
+
+    data = {"value":value, "created_at":now_str}
+    response = requests.post(url, headers=headers, json=data)
+    print("JSON Response ", response.json())
+
 def run_example():
 
     print("\nSparkFun Qwiic Air Quality Sensor - SGP40, Example 1\n")
@@ -15,13 +36,15 @@ def run_example():
     print("\nSGP40 ready!")
 
     while True:
+        voc = my_sgp40.get_VOC_index()
+        print("\nVOC Index is: " + str(voc))
 
-        print("\nVOC Index is: " + str(my_sgp40.get_VOC_index()))
-
-        time.sleep(1)
+        send_data(voc)
+        time.sleep(60)
 
 if __name__ == '__main__':
     try:
+        
         run_example()
     except (KeyboardInterrupt, SystemExit) as exErr:
         print("\nEnding Example 1")
