@@ -2,3 +2,4 @@ sparkfun-qwiic-sgp40
 sparkfun-qwiic-i2c
 requests
 pytz
+python-dotenv

@@ -1,14 +1,17 @@
 from __future__ import print_function
 import qwiic_sgp40
 import time
-import sys
+import sys, os
 import requests
 from datetime import datetime
 import pytz
+from dotenv import load_dotenv
+# some how, if we expose the key to github, the adafruit will reset our key. So we hide the key into environ.
+load_dotenv()
 
 def send_data(value):
-    url = "https://io.adafruit.com/api/v2/nathandyao/feeds/dashpi00-airqualitysensor/data"
-    headers = {"Content-Type": "application/json", "charset":"utf-8", "X-AIO-Key":"aio_qdah05pVA7zNQeYEwAlECkwVjHCk"}
+    url = os.getenv("DATA_URL")
+    headers = {"Content-Type": "application/json", "charset":"utf-8", "X-AIO-Key":os.getenv("AIO_KEY")}
    
 
     pst_tz = pytz.timezone('US/Pacific')
