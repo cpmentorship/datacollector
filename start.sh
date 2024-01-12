@@ -3,5 +3,6 @@
 echo
 
 cd /home/pi/dev/git/datacollector
-source alviso/bin/activate
+. alviso/bin/activate
+# pip install -r requirements.txt
 python app.py
