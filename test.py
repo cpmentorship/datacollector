@@ -11,6 +11,7 @@ load_dotenv()
 
 def send_data(value):
     url = os.getenv("DATA_URL")
+    api_url = os.getenv("API_SERVER")
     headers = {"Content-Type": "application/json", "charset":"utf-8", "X-AIO-Key":os.getenv("AIO_KEY")}
    
 
@@ -25,6 +26,36 @@ def send_data(value):
     data = {"value":value, "created_at":now_str}
     response = requests.post(url, headers=headers, json=data)
     print("JSON Response ", response.json())
+
+    air_sample = {
+                    "sgp40":{
+                        "device_id": "dashpi00",
+                        "sample": value,
+                        "sample_time" : now_str
+                        }
+                }
+    api_resp = requests.post(api_url, headers=headers, json=air_sample)
+    print("api_server JSON Response ", api_resp.json())
+
+
+
+def send_data_2_api(value):
+    api_url = os.getenv("API_SERVER")
+    headers = {"Content-Type": "application/json", "charset":"utf-8", "X-AIO-Key":os.getenv("AIO_KEY")}
+   
+
+    pst_tz = pytz.timezone('US/Pacific')
+    now = datetime.now()
+    now_pst = pst_tz.localize(now)
+
+    # Add formatting
+    fmt = '%Y-%m-%d %H:%M:%S %Z%z'
+    now_str = now_pst.strftime(fmt)
+
+    data = {"value":value, "created_at":now_str}
+    response = requests.post(url, headers=headers, json=data)
+    print("JSON Response ", response.json())
+
 
 def run_example():
 
