@@ -74,7 +74,7 @@ crontab -e
 ```
 to add the cronjob at the restart of the system
 ```
-@reboot /home/pi/dev/git/datacollector/start.sh
+@reboot  sleep 10; /usr/bin/screen -dmS autosession /home/pi/dev/git/datacollector/start.sh &
 ```
 
 
