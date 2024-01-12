@@ -66,6 +66,17 @@ VOC Index is: 64
 VOC Index is: 63
 
 ```
+## add script to run whenever the raspberry restarted
+
+Run this 
+```
+crontab -e
+```
+to add the cronjob at the restart of the system
+```
+@reboot /home/pi/dev/git/datacollector/start.sh
+```
+
 
 
 ## Next Steps: Connecting to Adafruit IO
