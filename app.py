@@ -12,7 +12,10 @@ load_dotenv()
 def send_data(value):
     url = os.getenv("DATA_URL")
     api_url = os.getenv("API_SERVER")
-    headers = {"Content-Type": "application/json", "charset":"utf-8", "X-AIO-Key":os.getenv("AIO_KEY")}
+    headers = {"Content-Type": "application/json", 
+                "charset":"utf-8", 
+                "X-AIO-Key":os.getenv("AIO_KEY"), 
+                "x-api-key":os.getenv("API_KEY")}
    
 
     # pst_tz = pytz.timezone('US/Pacific')
