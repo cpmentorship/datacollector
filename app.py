@@ -36,7 +36,7 @@ def send_data(value):
     try:
         data = {"value":value, "created_at":now_str}
         response = requests.post(url, headers=headers, json=data)
-        print("JSON Response ", response.json(url))
+        print("JSON Response ", response.json())
 
     except Exception as e:
         print(f"We got error post the data to {url}")
