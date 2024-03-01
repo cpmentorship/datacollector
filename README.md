@@ -1,3 +1,10 @@
+#TODO
+
+1. send sound data to adfruit and cloud. 
+2. Since the adfruit has the rate limit, we can only send the data once a minute, so we need pack 1 minute data and send them together. This require the change of both client side and server side.
+
+
+
 # First Time Setup Instructions
 
 ## Step 0: Hardware and Example code
@@ -106,4 +113,6 @@ to add the cronjob at the restart of the system
 3. **Run the Function**: This function will transmit the collected data to the feed you created in your Adafruit IO account.
 
 ![Seeting 1](images/io.adafruit.com-clickio.png)
+
+
 
