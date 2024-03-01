@@ -6,8 +6,45 @@ import requests
 from datetime import datetime
 import pytz
 from dotenv import load_dotenv
+from smbus2 import SMBus
 # some how, if we expose the key to github, the adafruit will reset our key. So we hide the key into environ.
 load_dotenv()
+
+bus = SMBus(1)
+
+# I2C address
+address = 0x48
+
+# Registers
+I2C_REG_VERSION		= 0x00
+I2C_REG_ID3			= 0x01
+I2C_REG_ID2			= 0x02
+I2C_REG_ID1			= 0x03
+I2C_REG_ID0			= 0x04
+I2C_REG_SCRATCH		= 0x05
+I2C_REG_CONTROL		= 0x06
+I2C_REG_TAVG_HIGH	= 0x07
+I2C_REG_TAVG_LOW	= 0x08
+I2C_REG_RESET		= 0x09
+I2C_REG_DECIBEL		= 0x0A
+I2C_REG_MIN			= 0x0B
+I2C_REG_MAX			= 0x0C
+I2C_REG_THR_MIN     = 0x0D
+I2C_REG_THR_MAX     = 0x0E
+I2C_REG_HISTORY_0	= 0x14
+I2C_REG_HISTORY_99	= 0x77
+
+###############################################
+# Settings
+def write(value):
+        bus.write_byte_data(address, 0, value)
+        return -1
+
+def soundlevel():
+        sound = bus.read_byte_data(address, I2C_REG_DECIBEL)
+        return sound
+
+
 
 def send_data(value):
     simple_error_count = 0
@@ -79,16 +116,23 @@ def run_example():
 
     print("\nSGP40 ready!")
 
+
+    print("\nPCB Artists Sound Level Sensor\n")
+    
+    # Read device ID to make sure that we can communicate with the sensor
+    data = bus.read_byte_data(address, I2C_REG_VERSION)
+    print("dbMeter VERSION = ",data)
+
     while True:
         voc = my_sgp40.get_VOC_index()
         print("\nVOC Index is: " + str(voc))
-
+        time.sleep(1)
+        print("\Sound Level dB is: " + str(soundlevel()))
         send_data(voc)
         time.sleep(60) #every minute
 
 if __name__ == '__main__':
     try:
-        
         run_example()
     except (KeyboardInterrupt, SystemExit) as exErr:
         print("\nEnding Example 1")
