@@ -44,11 +44,13 @@ def soundlevel():
         sound = bus.read_byte_data(address, I2C_REG_DECIBEL)
         return sound
 
-
-
-def send_data(value):
+def send_air_data(value):
     simple_error_count = 0
     url = os.getenv("DATA_URL")
+    air_feed = os.getenv("AIR_QUALITY")
+    
+    air_url = f"{url}/{air_feed}/data"
+    
     api_url = os.getenv("API_SERVER")
     headers = {"Content-Type": "application/json", 
                 "charset":"utf-8", 
@@ -72,7 +74,7 @@ def send_data(value):
 
     try:
         data = {"value":value, "created_at":now_str}
-        response = requests.post(url, headers=headers, json=data)
+        response = requests.post(air_url, headers=headers, json=data)
         print("JSON Response ", response.json())
 
     except Exception as e:
@@ -104,6 +106,64 @@ def send_data(value):
         #You can not have two date sinks all down
         raise Exception("Both data destinations are down. We stop!")
 
+
+def send_sound_data(value):
+    simple_error_count = 0
+    url = os.getenv("DATA_URL")
+    sound_feed = os.getenv("SOUND_LEVEL")
+    sound_url = f"{url}/{sound_feed}/data"
+    api_url = os.getenv("API_SERVER")
+    headers = {"Content-Type": "application/json", 
+                "charset":"utf-8", 
+                "X-AIO-Key":os.getenv("AIO_KEY"), 
+                "x-api-key":os.getenv("API_KEY")}
+   
+    # pst_tz = pytz.timezone('US/Pacific')
+    # now = datetime.now()
+    # now_pst = pst_tz.localize(now)
+
+    # Add formatting
+    # fmt = '%Y-%m-%d %H:%M:%S %Z%z'
+    # now_str = now_pst.strftime(fmt)
+    # pydantic does not support localized time, so we use gmt
+    now = datetime.utcnow()
+    fmt = '%Y-%m-%d %H:%M:%S'
+    now_str = now.strftime(fmt)
+
+    try:
+        data = {"value":value, "created_at":now_str}
+        response = requests.post(sound_url, headers=headers, json=data)
+        print("JSON Response ", response.json())
+
+    except Exception as e:
+        print(f"We got error post the data to {url}")
+        print(f"Error {e}")
+        simple_error_count += 1
+    
+    # try:
+    #     data = {
+    #                     "sgp40":{
+    #                         "device_id": "dashpi00",
+    #                         "sample": value,
+    #                         "sample_time" : now_str
+    #                         }
+    #                 }
+    #     print(f"sending request to {api_url}")
+    #     print(f"data {data}")
+    #     api_resp = requests.post(api_url, headers=headers, json=data)
+    #     print(f"API response {api_resp}")
+    #     print(f"API Resp {api_resp.content}")
+    #     print("api_server JSON Response ", api_resp.json())
+
+    # except Exception as e:
+    #     print(f"We got error post the data to {api_url}")
+    #     print(f"Error {e}")
+    #     simple_error_count += 1    
+
+    if simple_error_count >= 2:
+        #You can not have two date sinks all down
+        raise Exception("Both data destinations are down. We stop!")
+
 def run_example():
 
     print("\nSparkFun Qwiic Air Quality Sensor - SGP40, Example 1\n")
@@ -122,14 +182,22 @@ def run_example():
     # Read device ID to make sure that we can communicate with the sensor
     data = bus.read_byte_data(address, I2C_REG_VERSION)
     print("dbMeter VERSION = ",data)
-
+    count = 0
+    largest = 0
     while True:
-        voc = my_sgp40.get_VOC_index()
-        print("\nVOC Index is: " + str(voc))
+        if (count == 60):
+            count = 0
+            voc = my_sgp40.get_VOC_index()
+            print("\Sound Level dB is: " + str(largest))
+            print("\nVOC Index is: " + str(voc))
+            send_air_data(voc)
+            send_sound_data(largest)
+            largest = 0
         time.sleep(1)
-        print("\Sound Level dB is: " + str(soundlevel()))
-        send_data(voc)
-        time.sleep(60) #every minute
+        sound = soundlevel()
+        if (sound>largest):
+            largest = sound
+        count += 1
 
 if __name__ == '__main__':
     try:
